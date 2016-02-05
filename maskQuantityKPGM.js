@@ -30,15 +30,17 @@
 
 							var currentPrecision = (object.val() == '' || object.val().split(".").length == 1) ? 0:object.val().split(".")[1].length;
 
+
 							if(currentPrecision > precision) {
 
 								if(precision == 0) {
 									 // Remove with dot
 									 object.val(prepareCommas(object.val().substring(0, object.val().length - (currentPrecision - precision + 1) ))['value']);
+
 								}
 								else {
 									// Remove only last decimals
-									object.val(prepareCommas(object.val().substring(0, object.val().length - (currentPrecision - precision) ))['value']);
+									object.val(prepareCommas(object.val().substring(0, object.val().length - (currentPrecision - precision ) ))['value']);
 								}
 
 							}
@@ -47,7 +49,38 @@
 
 
 
-						}
+						},
+						cleanupNewValue: function(object, value, precision) {
+
+							var currentPrecision = (value == '' || value.split(".").length == 1) ? 0:value.split(".")[1].length;
+							console.log("Current precision: "+currentPrecision);
+							console.log("Precision from settings" + precision);
+							console.log("Value pasted " + value);
+
+							if(currentPrecision > precision) {
+
+								if(precision == 0) {
+									// Remove with dot
+									console.log("tutaj");
+									console.log("sub1 "+value.substring(0, value.length - (currentPrecision - precision + 1) ));
+									console.log('final '+prepareCommas(value.substring(0, value.length - (currentPrecision - precision + 1) ))['value']);
+									object.val(prepareCommas(value.substring(0, value.length - (currentPrecision - precision + 1) ))['value']);
+
+								}
+								else {
+									// Remove only last decimals
+									console.log("tutaj2");
+									console.log("sub2 "+value.substring(0, value.length - (currentPrecision - precision ) ));
+									object.val(prepareCommas(value.substring(0, value.length - (currentPrecision - precision ) ))['value']);
+								}
+
+							}
+							else object.val(prepareCommas(value)['value']);
+
+
+
+
+						},
 					}
 
 
@@ -73,7 +106,11 @@
 
 								if(newPrecision > settings.precision)
 								{
-									$(this).val(prepareCommas($(this).val().substring(0, $(this).val().length + (settings.precision - newPrecision) ))['value']);
+									if(settings.precision == 0) {
+
+										$(this).val(prepareCommas($(this).val().substring(0, $(this).val().length - (newPrecision - settings.precision + 1) ))['value']);
+									}
+									else $(this).val(prepareCommas($(this).val().substring(0, $(this).val().length - (newPrecision - settings.precision) ))['value']);
 								}
 								else{
 
@@ -89,6 +126,15 @@
 								this.setSelectionRange(start+positionMove, end+positionMove);
 
 							});
+
+							$(this).bind("paste", function(e){
+
+								var pastedData = e.originalEvent.clipboardData.getData('text');
+
+
+								//p.cleanupNewValue($(this), pastedData, settings.precision);
+
+							} );
 
 							$(this).off('keypress').on('keypress', function(e){
 
@@ -112,6 +158,8 @@
 							  }
 
 								currentPrecision = ($(this).val() == '' || $(this).val().split(".").length == 1) ? 0:$(this).val().split(".")[1].length;
+
+								if($(this).val() == '0' && key != '.') $(this).val('');
 
 								this.oldText = $(this).val();
 
