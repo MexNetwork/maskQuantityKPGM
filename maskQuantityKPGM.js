@@ -4,7 +4,7 @@
 * Authors: Karol Pomaski, Gonzalo Marquez
 * Company: MexNetwork.com
 * Example:
-*   To establish a mask:                    $('#quant').maskQuantityKPGM({precision: 2});
+*   To set a mask:                    $('#quant').maskQuantityKPGM({precision: 2});
 *   To unmask field and get the value:      $('#quant').unmaskQuantityKPGM();
 *********************************************************************************************/
 
